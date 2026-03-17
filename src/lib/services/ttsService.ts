@@ -58,8 +58,8 @@ export async function generateAudioBriefing(patient: Patient): Promise<string> {
   const region = import.meta.env.VITE_AWS_REGION || 'us-east-1';
   const accessKeyId = import.meta.env.VITE_AWS_ACCESS_KEY_ID;
   const secretAccessKey = import.meta.env.VITE_AWS_SECRET_ACCESS_KEY;
-  const voiceId = import.meta.env.VITE_AWS_POLLY_VOICE_ID || 'Joanna';
-  const engine = import.meta.env.VITE_AWS_POLLY_ENGINE || 'neural';
+  const voiceId = (import.meta.env.VITE_AWS_POLLY_VOICE_ID || 'Joanna') as 'Joanna';
+  const engine = (import.meta.env.VITE_AWS_POLLY_ENGINE || 'neural') as 'neural';
 
   if (!accessKeyId || !secretAccessKey) {
     throw new Error('AWS credentials not configured. Check .env file for VITE_AWS_ACCESS_KEY_ID and VITE_AWS_SECRET_ACCESS_KEY');
@@ -111,13 +111,13 @@ async function streamToBlob(stream: ReadableStream<Uint8Array> | Blob): Promise<
   }
 
   const reader = stream.getReader();
-  const chunks: Uint8Array[] = [];
+  const chunks: BlobPart[] = [];
 
   try {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      if (value) chunks.push(value);
+      if (value) chunks.push(value as BlobPart);
     }
   } finally {
     reader.releaseLock();

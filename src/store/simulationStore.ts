@@ -5,13 +5,12 @@ import { create } from 'zustand';
 import type {
   Emergency,
   Responder,
-  Alert,
   AlertRadius,
   SimulationState,
   Patient,
   EmergencyType,
 } from '@/types';
-import { mockResponders, mockPatients } from '@/lib/data/mockData';
+import { mockResponders } from '@/lib/data/mockData';
 
 interface SimulationStore extends SimulationState {
   // State
