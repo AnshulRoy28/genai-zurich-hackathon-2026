@@ -1,0 +1,182 @@
+[
+  {
+    "id": "patient-001",
+    "age": 68,
+    "gender": "male",
+    "bloodType": "A+",
+    "allergies": ["Penicillin", "Shellfish"],
+    "medications": [
+      "Aspirin 100mg daily",
+      "Metoprolol 50mg twice daily",
+      "Atorvastatin 20mg evening"
+    ],
+    "conditions": [
+      "Hypertension",
+      "Type 2 Diabetes",
+      "Previous MI (2019)",
+      "Atrial Fibrillation"
+    ],
+    "emergencyContacts": [
+      {
+        "name": "Maria Schmidt",
+        "phone": "+41 79 123 4567",
+        "relationship": "Wife"
+      },
+      {
+        "name": "Dr. Hans Weber",
+        "phone": "+41 44 123 4567",
+        "relationship": "Cardiologist"
+      }
+    ],
+    "location": {
+      "lat": 47.3769,
+      "lng": 8.5417,
+      "street": "Bahnhofstrasse 45",
+      "city": "Zürich",
+      "postalCode": "8001",
+      "floor": "3",
+      "apartment": "B"
+    }
+  },
+  {
+    "id": "patient-002",
+    "age": 34,
+    "gender": "female",
+    "bloodType": "O-",
+    "allergies": ["Latex", "Ibuprofen"],
+    "medications": ["Levothyroxine 75mcg morning", "Oral contraceptive"],
+    "conditions": ["Hypothyroidism", "Asthma (mild)"],
+    "emergencyContacts": [
+      {
+        "name": "Thomas Müller",
+        "phone": "+41 79 234 5678",
+        "relationship": "Husband"
+      },
+      {
+        "name": "Anna Müller",
+        "phone": "+41 79 345 6789",
+        "relationship": "Mother"
+      }
+    ],
+    "location": {
+      "lat": 47.3655,
+      "lng": 8.5458,
+      "street": "Seestrasse 120",
+      "city": "Zürich",
+      "postalCode": "8002",
+      "floor": "2"
+    }
+  },
+  {
+    "id": "patient-003",
+    "age": 82,
+    "gender": "female",
+    "bloodType": "B+",
+    "allergies": ["Sulfa drugs"],
+    "medications": [
+      "Warfarin 5mg daily",
+      "Furosemide 40mg morning",
+      "Digoxin 0.125mg daily",
+      "Potassium supplement"
+    ],
+    "conditions": [
+      "Congestive Heart Failure",
+      "Atrial Fibrillation",
+      "Chronic Kidney Disease Stage 3",
+      "Osteoporosis"
+    ],
+    "emergencyContacts": [
+      {
+        "name": "Sophie Fischer",
+        "phone": "+41 79 456 7890",
+        "relationship": "Daughter"
+      },
+      {
+        "name": "Pflegeheim Sonnenhof",
+        "phone": "+41 44 234 5678",
+        "relationship": "Care Facility"
+      }
+    ],
+    "location": {
+      "lat": 47.3747,
+      "lng": 8.5494,
+      "street": "Universitätstrasse 88",
+      "city": "Zürich",
+      "postalCode": "8006",
+      "floor": "1",
+      "apartment": "A"
+    }
+  },
+  {
+    "id": "patient-004",
+    "age": 45,
+    "gender": "male",
+    "bloodType": "AB+",
+    "allergies": ["None known"],
+    "medications": [
+      "Insulin Glargine 24 units bedtime",
+      "Metformin 1000mg twice daily"
+    ],
+    "conditions": ["Type 1 Diabetes", "Diabetic Neuropathy", "Retinopathy"],
+    "emergencyContacts": [
+      {
+        "name": "Lisa Keller",
+        "phone": "+41 79 567 8901",
+        "relationship": "Partner"
+      },
+      {
+        "name": "Dr. Stefan Meier",
+        "phone": "+41 44 345 6789",
+        "relationship": "Endocrinologist"
+      }
+    ],
+    "location": {
+      "lat": 47.3686,
+      "lng": 8.5391,
+      "street": "Limmatquai 34",
+      "city": "Zürich",
+      "postalCode": "8001",
+      "floor": "4"
+    }
+  },
+  {
+    "id": "patient-005",
+    "age": 56,
+    "gender": "male",
+    "bloodType": "O+",
+    "allergies": ["Codeine", "Morphine"],
+    "medications": [
+      "Clopidogrel 75mg daily",
+      "Ramipril 10mg daily",
+      "Rosuvastatin 40mg evening",
+      "Nitroglycerin spray PRN"
+    ],
+    "conditions": [
+      "Coronary Artery Disease",
+      "Previous CABG (2021)",
+      "Hyperlipidemia",
+      "Obesity (BMI 32)"
+    ],
+    "emergencyContacts": [
+      {
+        "name": "Sandra Zimmermann",
+        "phone": "+41 79 678 9012",
+        "relationship": "Wife"
+      },
+      {
+        "name": "Dr. Peter Huber",
+        "phone": "+41 44 456 7890",
+        "relationship": "Cardiac Surgeon"
+      }
+    ],
+    "location": {
+      "lat": 47.3812,
+      "lng": 8.545,
+      "street": "Rämistrasse 71",
+      "city": "Zürich",
+      "postalCode": "8001",
+      "floor": "2",
+      "apartment": "C"
+    }
+  }
+]
