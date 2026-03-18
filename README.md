@@ -28,7 +28,6 @@ RapidResponse connects cardiac arrest victims with nearby medically-trained citi
 - **🗺️ 3D Map Visualization** - Real-time tracking on 3D map of Zurich with building visualization
 - **🚨 Smart Radius Escalation** - Automatically expands search (300m → 400m → 600m) if insufficient responders found
 - **🚗 Emergency Vehicle Routing** - Follows roads but takes shortcuts when they save >30% distance
-- **📊 Real-Time Animation** - Uber-style blue line visualization showing route progress at 50 km/h
 
 ---
 
