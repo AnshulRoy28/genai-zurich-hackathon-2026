@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
-import type { Emergency } from '@/types';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
+import type { Emergency } from "@/types";
 
 interface EmergencyMarkerProps {
   map: maplibregl.Map | null;
@@ -16,7 +16,7 @@ function EmergencyMarker({ map, emergency }: EmergencyMarkerProps) {
 
     // Add CSS animation if not already added
     if (!styleRef.current) {
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.textContent = `
         @keyframes pulse {
           0% {
@@ -40,34 +40,34 @@ function EmergencyMarker({ map, emergency }: EmergencyMarkerProps) {
     if (emergency) {
       if (!markerRef.current) {
         // Create pulsing emergency marker
-        const el = document.createElement('div');
-        el.className = 'emergency-marker';
-        el.style.width = '40px';
-        el.style.height = '40px';
-        el.style.position = 'relative';
+        const el = document.createElement("div");
+        el.className = "emergency-marker";
+        el.style.width = "40px";
+        el.style.height = "40px";
+        el.style.position = "relative";
 
         // Inner circle
-        const inner = document.createElement('div');
-        inner.style.width = '20px';
-        inner.style.height = '20px';
-        inner.style.borderRadius = '50%';
-        inner.style.backgroundColor = '#EF4444';
-        inner.style.position = 'absolute';
-        inner.style.top = '50%';
-        inner.style.left = '50%';
-        inner.style.transform = 'translate(-50%, -50%)';
-        inner.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.8)';
+        const inner = document.createElement("div");
+        inner.style.width = "20px";
+        inner.style.height = "20px";
+        inner.style.borderRadius = "50%";
+        inner.style.backgroundColor = "#EF4444";
+        inner.style.position = "absolute";
+        inner.style.top = "50%";
+        inner.style.left = "50%";
+        inner.style.transform = "translate(-50%, -50%)";
+        inner.style.boxShadow = "0 0 10px rgba(239, 68, 68, 0.8)";
 
         // Pulsing outer circle
-        const outer = document.createElement('div');
-        outer.style.width = '40px';
-        outer.style.height = '40px';
-        outer.style.borderRadius = '50%';
-        outer.style.border = '3px solid #EF4444';
-        outer.style.position = 'absolute';
-        outer.style.top = '0';
-        outer.style.left = '0';
-        outer.style.animation = 'pulse 2s infinite';
+        const outer = document.createElement("div");
+        outer.style.width = "40px";
+        outer.style.height = "40px";
+        outer.style.borderRadius = "50%";
+        outer.style.border = "3px solid #EF4444";
+        outer.style.position = "absolute";
+        outer.style.top = "0";
+        outer.style.left = "0";
+        outer.style.animation = "pulse 2s infinite";
 
         el.appendChild(outer);
         el.appendChild(inner);
@@ -77,7 +77,10 @@ function EmergencyMarker({ map, emergency }: EmergencyMarkerProps) {
           .addTo(map);
       } else {
         // Update existing marker position
-        markerRef.current.setLngLat([emergency.location.lng, emergency.location.lat]);
+        markerRef.current.setLngLat([
+          emergency.location.lng,
+          emergency.location.lat,
+        ]);
       }
     } else {
       // Remove marker if no emergency

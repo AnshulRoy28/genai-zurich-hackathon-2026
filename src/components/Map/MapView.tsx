@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import type { Location } from '@/types';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import type { Location } from "@/types";
 
 interface MapViewProps {
   center: Location;
@@ -46,56 +46,57 @@ function MapView({
         new maplibregl.NavigationControl({
           visualizePitch: true,
         }),
-        'top-right'
+        "top-right",
       );
 
       // Enable 3D buildings
-      map.current.on('load', () => {
+      map.current.on("load", () => {
         if (!map.current) return;
 
         // Check if the source exists before adding the layer
         const style = map.current.getStyle();
-        const hasOpenMapTiles = style.sources && 'openmaptiles' in style.sources;
+        const hasOpenMapTiles =
+          style.sources && "openmaptiles" in style.sources;
 
         if (hasOpenMapTiles) {
           // Add 3D building layer
           const layers = map.current.getStyle().layers;
           const labelLayerId = layers?.find(
-            (layer) => layer.type === 'symbol' && layer.layout?.['text-field']
+            (layer) => layer.type === "symbol" && layer.layout?.["text-field"],
           )?.id;
 
           map.current.addLayer(
             {
-              id: '3d-buildings',
-              source: 'openmaptiles',
-              'source-layer': 'building',
-              filter: ['==', 'extrude', 'true'],
-              type: 'fill-extrusion',
+              id: "3d-buildings",
+              source: "openmaptiles",
+              "source-layer": "building",
+              filter: ["==", "extrude", "true"],
+              type: "fill-extrusion",
               minzoom: 14,
               paint: {
-                'fill-extrusion-color': '#aaa',
-                'fill-extrusion-height': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
+                "fill-extrusion-color": "#aaa",
+                "fill-extrusion-height": [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
                   15,
                   0,
                   15.05,
-                  ['get', 'render_height'],
+                  ["get", "render_height"],
                 ],
-                'fill-extrusion-base': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
+                "fill-extrusion-base": [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
                   15,
                   0,
                   15.05,
-                  ['get', 'render_min_height'],
+                  ["get", "render_min_height"],
                 ],
-                'fill-extrusion-opacity': 0.6,
+                "fill-extrusion-opacity": 0.6,
               },
             },
-            labelLayerId
+            labelLayerId,
           );
         }
 
@@ -115,9 +116,7 @@ function MapView({
     };
   }, []); // Empty dependency array - only run once
 
-  return (
-    <div ref={mapContainer} className="w-full h-full" />
-  );
+  return <div ref={mapContainer} className="w-full h-full" />;
 }
 
 export default MapView;

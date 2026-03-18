@@ -1,13 +1,20 @@
-// Proximity-based responder matching algorithm
+// Proximity-based responder matching algorithm with route optimization
 // Following coding standards: explicit types, immutable patterns
 
-import type { Responder, Emergency, AlertRadius } from '@/types';
-import { calculateDistance } from '../utils/distance';
+import type { Responder, Emergency, AlertRadius, Location } from "@/types";
+import { calculateDistance } from "../utils/distance";
+import { fetchRoute } from "../services/routingService";
 
 interface RankedResponder {
   responder: Responder;
   distance: number;
   score: number;
+}
+
+export interface ResponderWithRoute {
+  responder: Responder;
+  route: Location[];
+  routeDistance: number;
 }
 
 /**
@@ -18,6 +25,7 @@ const CERTIFICATION_WEIGHTS: Record<string, number> = {
   paramedic: 0.8,
   nurse: 0.6,
   cpr_trained: 0.4,
+  first_responder: 0.4,
 };
 
 /**
@@ -30,16 +38,13 @@ const CERTIFICATION_WEIGHTS: Record<string, number> = {
 export function filterRespondersByRadius(
   responders: Responder[],
   emergency: Emergency,
-  radius: AlertRadius
+  radius: AlertRadius,
 ): Responder[] {
   return responders.filter((responder) => {
-    if (responder.status !== 'available') return false;
-    
-    const distance = calculateDistance(
-      responder.location,
-      emergency.location
-    );
-    
+    if (responder.status !== "available") return false;
+
+    const distance = calculateDistance(responder.location, emergency.location);
+
     return distance <= radius;
   });
 }
@@ -52,15 +57,12 @@ export function filterRespondersByRadius(
  */
 export function rankResponders(
   responders: Responder[],
-  emergency: Emergency
+  emergency: Emergency,
 ): RankedResponder[] {
   const maxDistance = 600; // Maximum search radius
 
   const ranked = responders.map((responder) => {
-    const distance = calculateDistance(
-      responder.location,
-      emergency.location
-    );
+    const distance = calculateDistance(responder.location, emergency.location);
 
     // Normalize distance (0 = far, 1 = close)
     const normalizedDistance = 1 - Math.min(distance / maxDistance, 1);
@@ -83,22 +85,73 @@ export function rankResponders(
 }
 
 /**
- * Find best responders within radius
+ * Find best responders within radius based on actual route distance
+ * Computes routes for all responders in range and selects the 2 with shortest routes
  * @param responders All available responders
  * @param emergency Emergency location
  * @param radius Search radius
  * @param limit Maximum number of responders to return
- * @returns Top N ranked responders
+ * @returns Top N responders with their computed routes
  */
-export function findBestResponders(
+export async function findBestRespondersWithRoutes(
   responders: Responder[],
   emergency: Emergency,
   radius: AlertRadius,
-  limit: number = 5
-): RankedResponder[] {
+  limit: number = 2,
+): Promise<ResponderWithRoute[]> {
+  // Filter responders within radius
   const withinRadius = filterRespondersByRadius(responders, emergency, radius);
-  const ranked = rankResponders(withinRadius, emergency);
-  return ranked.slice(0, limit);
+
+  if (withinRadius.length === 0) {
+    return [];
+  }
+
+  // Compute routes for all responders in range
+  const respondersWithRoutes = await Promise.all(
+    withinRadius.map(async (responder) => {
+      try {
+        const route = await fetchRoute(responder.location, emergency.location);
+        const routeDistance = calculateRouteDistance(route);
+
+        return {
+          responder,
+          route,
+          routeDistance,
+        };
+      } catch {
+        // Fallback to straight-line distance if routing fails
+        const straightLineDistance = calculateDistance(
+          responder.location,
+          emergency.location,
+        );
+
+        return {
+          responder,
+          route: [responder.location, emergency.location],
+          routeDistance: straightLineDistance,
+        };
+      }
+    }),
+  );
+
+  // Sort by actual route distance (shortest first)
+  const sorted = respondersWithRoutes.sort(
+    (a, b) => a.routeDistance - b.routeDistance,
+  );
+
+  // Return top N responders
+  return sorted.slice(0, limit);
+}
+
+/**
+ * Calculate total route distance
+ */
+function calculateRouteDistance(route: Location[]): number {
+  let total = 0;
+  for (let i = 0; i < route.length - 1; i++) {
+    total += calculateDistance(route[i], route[i + 1]);
+  }
+  return total;
 }
 
 /**

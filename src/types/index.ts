@@ -22,9 +22,9 @@ export interface Address extends Location {
 // Responder Types
 // ============================================================================
 
-export type CertificationLevel = 'first_responder';
+export type CertificationLevel = "first_responder";
 
-export type ResponderStatus = 'available' | 'busy' | 'offline' | 'responding';
+export type ResponderStatus = "available" | "busy" | "offline" | "responding";
 
 export interface ResponseHistory {
   totalResponses: number;
@@ -45,9 +45,9 @@ export interface Responder {
 // Patient Types
 // ============================================================================
 
-export type BloodType = 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
+export type BloodType = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
 
-export type Gender = 'male' | 'female' | 'other';
+export type Gender = "male" | "female" | "other";
 
 export interface EmergencyContact {
   name: string;
@@ -71,21 +71,21 @@ export interface Patient {
 // Emergency Types
 // ============================================================================
 
-export type EmergencyType = 
-  | 'cardiac_arrest' 
-  | 'choking' 
-  | 'severe_bleeding' 
-  | 'unconscious'
-  | 'stroke'
-  | 'seizure';
+export type EmergencyType =
+  | "cardiac_arrest"
+  | "choking"
+  | "severe_bleeding"
+  | "unconscious"
+  | "stroke"
+  | "seizure";
 
-export type EmergencyStatus = 
-  | 'active' 
-  | 'responder_assigned' 
-  | 'responder_arrived' 
-  | 'ambulance_arrived' 
-  | 'resolved'
-  | 'cancelled';
+export type EmergencyStatus =
+  | "active"
+  | "responder_assigned"
+  | "responder_arrived"
+  | "ambulance_arrived"
+  | "resolved"
+  | "cancelled";
 
 export interface Emergency {
   id: string;
@@ -96,7 +96,7 @@ export interface Emergency {
   status: EmergencyStatus;
   assignedResponderId?: string;
   responseTime?: number;
-  outcome?: 'success' | 'failure';
+  outcome?: "success" | "failure";
 }
 
 // ============================================================================
@@ -105,7 +105,7 @@ export interface Emergency {
 
 export type AlertRadius = 300 | 400 | 600;
 
-export type AlertStatus = 'pending' | 'accepted' | 'declined' | 'timeout';
+export type AlertStatus = "pending" | "accepted" | "declined" | "timeout";
 
 export interface Alert {
   id: string;
@@ -133,7 +133,7 @@ export interface AudioBriefing {
 export interface BriefingSection {
   title: string;
   content: string;
-  priority: 'critical' | 'important' | 'informational';
+  priority: "critical" | "important" | "informational";
 }
 
 // ============================================================================
@@ -169,7 +169,7 @@ export interface Scenario {
   patient: Patient;
   emergencyType: EmergencyType;
   nearbyResponders: number;
-  expectedOutcome: 'success' | 'escalation_needed' | 'failure';
+  expectedOutcome: "success" | "escalation_needed" | "failure";
 }
 
 // ============================================================================
@@ -186,7 +186,7 @@ export interface MapConfig {
 export interface MarkerData {
   id: string;
   location: Location;
-  type: 'responder' | 'emergency' | 'ambulance';
+  type: "responder" | "emergency" | "ambulance";
   data: Responder | Emergency;
 }
 

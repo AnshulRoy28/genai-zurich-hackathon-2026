@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
-import type { Responder } from '@/types';
+import { useEffect, useRef } from "react";
+import maplibregl from "maplibre-gl";
+import type { Responder } from "@/types";
 
 interface ResponderMarkersProps {
   map: maplibregl.Map | null;
@@ -8,7 +8,7 @@ interface ResponderMarkersProps {
 }
 
 // All responders are blue (first responders)
-const RESPONDER_COLOR = '#3B82F6';
+const RESPONDER_COLOR = "#3B82F6";
 
 function ResponderMarkers({ map, responders }: ResponderMarkersProps) {
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -17,7 +17,7 @@ function ResponderMarkers({ map, responders }: ResponderMarkersProps) {
     if (!map) return;
 
     const currentMarkers = markersRef.current;
-    const currentResponderIds = new Set(responders.map(r => r.id));
+    const currentResponderIds = new Set(responders.map((r) => r.id));
 
     // Remove markers for responders that no longer exist
     currentMarkers.forEach((marker, id) => {
@@ -33,16 +33,16 @@ function ResponderMarkers({ map, responders }: ResponderMarkersProps) {
 
       if (!marker) {
         // Create new marker
-        const el = document.createElement('div');
-        el.className = 'responder-marker';
-        el.style.width = '24px';
-        el.style.height = '24px';
-        el.style.borderRadius = '50%';
-        el.style.border = '3px solid white';
+        const el = document.createElement("div");
+        el.className = "responder-marker";
+        el.style.width = "24px";
+        el.style.height = "24px";
+        el.style.borderRadius = "50%";
+        el.style.border = "3px solid white";
         el.style.backgroundColor = RESPONDER_COLOR;
-        el.style.cursor = 'pointer';
-        el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-        el.style.transition = 'opacity 0.3s ease';
+        el.style.cursor = "pointer";
+        el.style.boxShadow = "0 2px 4px rgba(0,0,0,0.3)";
+        el.style.transition = "opacity 0.3s ease";
 
         marker = new maplibregl.Marker({ element: el })
           .setLngLat([responder.location.lng, responder.location.lat])
@@ -56,7 +56,7 @@ function ResponderMarkers({ map, responders }: ResponderMarkersProps) {
 
       // Update marker appearance based on status
       const el = marker.getElement();
-      el.style.opacity = responder.status === 'available' ? '1' : '0.5';
+      el.style.opacity = responder.status === "available" ? "1" : "0.5";
       el.title = `${responder.name} - First Responder (${responder.status})`;
     });
 

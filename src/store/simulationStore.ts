@@ -1,7 +1,7 @@
 // Simulation state management using Zustand
 // Following coding standards: explicit types, immutable updates
 
-import { create } from 'zustand';
+import { create } from "zustand";
 import type {
   Emergency,
   Responder,
@@ -9,13 +9,13 @@ import type {
   SimulationState,
   Patient,
   EmergencyType,
-} from '@/types';
-import { mockResponders } from '@/lib/data/mockData';
+} from "@/types";
+import { mockResponders } from "@/lib/data/mockData";
 
 interface SimulationStore extends SimulationState {
   // State
   allResponders: Responder[];
-  
+
   // Actions
   startEmergency: (patient: Patient, type: EmergencyType) => void;
   assignResponder: (responderId: string) => void;
@@ -43,7 +43,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
       type,
       patient,
       location: patient.location,
-      status: 'active',
+      status: "active",
     };
 
     set({
@@ -64,13 +64,11 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
       return {
         currentEmergency: {
           ...state.currentEmergency,
-          status: 'responder_assigned',
+          status: "responder_assigned",
           assignedResponderId: responderId,
         },
         allResponders: state.allResponders.map((r) =>
-          r.id === responderId
-            ? { ...r, status: 'responding' as const }
-            : r
+          r.id === responderId ? { ...r, status: "responding" as const } : r,
         ),
       };
     }),
@@ -97,11 +95,10 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
       elapsedTime: 0,
       allResponders: mockResponders.map((r) => ({
         ...r,
-        status: Math.random() > 0.2 ? 'available' : 'busy',
+        status: Math.random() > 0.2 ? "available" : "busy",
       })),
     }),
 
   // Update elapsed time
-  updateElapsedTime: (time: number) =>
-    set({ elapsedTime: time }),
+  updateElapsedTime: (time: number) => set({ elapsedTime: time }),
 }));

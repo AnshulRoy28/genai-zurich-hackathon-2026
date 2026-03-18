@@ -1,13 +1,14 @@
-import { useState, useCallback } from 'react';
-import MapView from './components/Map/MapView';
-import ResponderMarkers from './components/Map/ResponderMarkers';
-import EmergencyMarker from './components/Map/EmergencyMarker';
-import RadiusCircle from './components/Map/RadiusCircle';
-import SimulationControls from './components/Dashboard/SimulationControls';
-import { useSimulationStore } from './store/simulationStore';
-import { useResponderSimulation } from './hooks/useResponderSimulation';
-import type { Location } from './types';
-import type maplibregl from 'maplibre-gl';
+import { useState, useCallback } from "react";
+import MapView from "./components/Map/MapView";
+import ResponderMarkers from "./components/Map/ResponderMarkers";
+import EmergencyMarker from "./components/Map/EmergencyMarker";
+import RadiusCircle from "./components/Map/RadiusCircle";
+import RouteLines from "./components/Map/RouteLines";
+import SimulationControls from "./components/Dashboard/SimulationControls";
+import { useSimulationStore } from "./store/simulationStore";
+import { useResponderSimulation } from "./hooks/useResponderSimulation";
+import type { Location } from "./types";
+import type maplibregl from "maplibre-gl";
 
 // Zurich city center
 const ZURICH_CENTER: Location = { lat: 47.3769, lng: 8.5417 };
@@ -17,10 +18,11 @@ function App() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const maptilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
-  const { allResponders, currentEmergency, currentRadius } = useSimulationStore();
-  
-  // Enable responder movement simulation
-  useResponderSimulation();
+  const { allResponders, currentEmergency, currentRadius } =
+    useSimulationStore();
+
+  // Enable responder movement simulation and get route data
+  const routesWithProgress = useResponderSimulation();
 
   const handleMapLoad = useCallback((loadedMap: maplibregl.Map) => {
     setMap(loadedMap);
@@ -31,12 +33,17 @@ function App() {
     return (
       <div className="w-full h-full bg-gray-900 text-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Emergency Response Simulation</h1>
-          <p className="text-gray-400 mb-8">3D Map with Real-Time Proximity Matching</p>
+          <h1 className="text-4xl font-bold mb-4">
+            Emergency Response Simulation
+          </h1>
+          <p className="text-gray-400 mb-8">
+            3D Map with Real-Time Proximity Matching
+          </p>
           <div className="bg-yellow-500/20 border border-yellow-500 rounded-lg p-4 max-w-md mx-auto">
             <p className="text-yellow-300 font-semibold mb-2">Setup Required</p>
             <p className="text-sm text-gray-300">
-              Add your Maptiler API key to <code className="bg-gray-800 px-2 py-1 rounded">.env</code>
+              Add your Maptiler API key to{" "}
+              <code className="bg-gray-800 px-2 py-1 rounded">.env</code>
             </p>
             <p className="text-xs text-gray-400 mt-2">
               See README.md for setup instructions
@@ -60,6 +67,7 @@ function App() {
       {/* Map overlays */}
       {mapLoaded && (
         <>
+          <RouteLines map={map} routes={routesWithProgress} />
           <ResponderMarkers map={map} responders={allResponders} />
           <EmergencyMarker map={map} emergency={currentEmergency} />
           {currentEmergency && (
@@ -71,7 +79,7 @@ function App() {
           )}
         </>
       )}
-      
+
       {!mapLoaded && (
         <div className="absolute inset-0 bg-gray-900 flex items-center justify-center">
           <div className="text-white text-center">
@@ -82,9 +90,7 @@ function App() {
       )}
 
       {/* UI Panels */}
-      {mapLoaded && (
-        <SimulationControls map={map} />
-      )}
+      {mapLoaded && <SimulationControls map={map} />}
     </div>
   );
 }

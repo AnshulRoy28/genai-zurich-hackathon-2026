@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import maplibregl from 'maplibre-gl';
-import type { Location, AlertRadius } from '@/types';
+import { useEffect } from "react";
+import maplibregl from "maplibre-gl";
+import type { Location, AlertRadius } from "@/types";
 
 interface RadiusCircleProps {
   map: maplibregl.Map | null;
@@ -12,18 +12,19 @@ function RadiusCircle({ map, center, radius }: RadiusCircleProps) {
   useEffect(() => {
     if (!map || !center) return;
 
-    const sourceId = 'radius-circle';
-    const layerId = 'radius-circle-layer';
+    const sourceId = "radius-circle";
+    const layerId = "radius-circle-layer";
 
     // Create circle GeoJSON
     const createCircle = (
       centerLng: number,
       centerLat: number,
-      radiusInMeters: number
+      radiusInMeters: number,
     ): GeoJSON.Feature<GeoJSON.Polygon> => {
       const points = 64;
       const coords: number[][] = [];
-      const distanceX = radiusInMeters / (111320 * Math.cos((centerLat * Math.PI) / 180));
+      const distanceX =
+        radiusInMeters / (111320 * Math.cos((centerLat * Math.PI) / 180));
       const distanceY = radiusInMeters / 110540;
 
       for (let i = 0; i < points; i++) {
@@ -35,17 +36,17 @@ function RadiusCircle({ map, center, radius }: RadiusCircleProps) {
       coords.push(coords[0]); // Close the circle
 
       return {
-        type: 'Feature',
+        type: "Feature",
         properties: {},
         geometry: {
-          type: 'Polygon',
+          type: "Polygon",
           coordinates: [coords],
         },
       };
     };
 
     const circleData: GeoJSON.FeatureCollection = {
-      type: 'FeatureCollection',
+      type: "FeatureCollection",
       features: [createCircle(center.lng, center.lat, radius)],
     };
 
@@ -59,32 +60,33 @@ function RadiusCircle({ map, center, radius }: RadiusCircleProps) {
 
     // Add source
     map.addSource(sourceId, {
-      type: 'geojson',
+      type: "geojson",
       data: circleData,
     });
 
     // Add layer with color based on radius
-    const color = radius === 300 ? '#3B82F6' : radius === 400 ? '#F97316' : '#EF4444';
+    const color =
+      radius === 300 ? "#3B82F6" : radius === 400 ? "#F97316" : "#EF4444";
 
     map.addLayer({
       id: layerId,
-      type: 'fill',
+      type: "fill",
       source: sourceId,
       paint: {
-        'fill-color': color,
-        'fill-opacity': 0.15,
+        "fill-color": color,
+        "fill-opacity": 0.15,
       },
     });
 
     // Add border
     map.addLayer({
       id: `${layerId}-border`,
-      type: 'line',
+      type: "line",
       source: sourceId,
       paint: {
-        'line-color': color,
-        'line-width': 2,
-        'line-opacity': 0.8,
+        "line-color": color,
+        "line-width": 2,
+        "line-opacity": 0.8,
       },
     });
 

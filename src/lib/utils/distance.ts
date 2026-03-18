@@ -1,7 +1,7 @@
 // Distance calculation utilities using Haversine formula
 // Following coding standards: explicit types, no any, immutable patterns
 
-import type { Location } from '@/types';
+import type { Location } from "@/types";
 
 /**
  * Calculate distance between two geographic coordinates using Haversine formula
@@ -69,5 +69,7 @@ export function formatTime(seconds: number): string {
   }
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
-  return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`;
+  return remainingSeconds > 0
+    ? `${minutes}m ${remainingSeconds}s`
+    : `${minutes}m`;
 }

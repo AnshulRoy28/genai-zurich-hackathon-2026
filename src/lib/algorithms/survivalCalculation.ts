@@ -7,14 +7,16 @@
  * @param responseTimeInSeconds Response time in seconds
  * @returns Survival probability as percentage (0-100)
  */
-export function calculateSurvivalProbability(responseTimeInSeconds: number): number {
+export function calculateSurvivalProbability(
+  responseTimeInSeconds: number,
+): number {
   const baseSurvival = 90;
   const dropPerMinute = 8.5;
   const responseTimeInMinutes = responseTimeInSeconds / 60;
 
   const survival = Math.max(
     10, // Minimum 10% survival
-    baseSurvival - responseTimeInMinutes * dropPerMinute
+    baseSurvival - responseTimeInMinutes * dropPerMinute,
   );
 
   return Math.round(survival);
@@ -28,7 +30,7 @@ export function calculateSurvivalProbability(responseTimeInSeconds: number): num
  */
 export function calculateTimeSaved(
   responderTime: number,
-  ambulanceTime: number
+  ambulanceTime: number,
 ): number {
   return Math.max(0, ambulanceTime - responderTime);
 }
@@ -41,7 +43,7 @@ export function calculateTimeSaved(
  */
 export function calculateSurvivalImprovement(
   responderTime: number,
-  ambulanceTime: number
+  ambulanceTime: number,
 ): number {
   const responderSurvival = calculateSurvivalProbability(responderTime);
   const ambulanceSurvival = calculateSurvivalProbability(ambulanceTime);
