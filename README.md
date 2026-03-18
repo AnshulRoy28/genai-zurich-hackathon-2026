@@ -34,71 +34,70 @@ RapidResponse connects cardiac arrest victims with nearby medically-trained citi
 
 ## 🏗️ System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         User Interface                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
-│  │  3D Map View │  │   Controls   │  │  Patient Selector    │  │
-│  │  (MapLibre)  │  │   Panel      │  │  (10 profiles)       │  │
-│  └──────────────┘  └──────────────┘  └──────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      State Management (Zustand)                 │
-│  • Emergency Location  • Responder Positions  • Simulation State│
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     Core Algorithms & Services                  │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────┐  │
-│  │ Proximity        │  │ Routing Service  │  │ TTS Service  │  │
-│  │ Matching         │  │ (OSRM + Optim.)  │  │ (AWS Polly)  │  │
-│  │ • Filter radius  │  │ • Road routing   │  │ • Generate   │  │
-│  │ • Compute routes │  │ • Shortcuts      │  │ • Play audio │  │
-│  │ • Select best 2  │  │ • Fallback       │  │              │  │
-│  └──────────────────┘  └──────────────────┘  └──────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        External Services                        │
-│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐    │
-│  │   Maptiler   │  │     OSRM     │  │    AWS Polly       │    │
-│  │  (3D Maps)   │  │  (Routing)   │  │  (Text-to-Speech)  │    │
-│  └──────────────┘  └──────────────┘  └────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph UI["User Interface Layer"]
+        MapView["3D Map View<br/>(MapLibre GL JS)"]
+        Controls["Simulation Controls<br/>(Start/Reset)"]
+        PatientSelect["Patient Selector<br/>(10 Profiles)"]
+    end
+    
+    subgraph State["State Management (Zustand)"]
+        EmergencyState["Emergency Location"]
+        ResponderState["Responder Positions"]
+        SimState["Simulation State"]
+    end
+    
+    subgraph Core["Core Algorithms & Services"]
+        ProximityMatch["Proximity Matching<br/>• Filter by radius<br/>• Compute routes<br/>• Select best 2"]
+        RoutingService["Routing Service<br/>• OSRM integration<br/>• Emergency shortcuts<br/>• Fallback logic"]
+        TTSService["TTS Service<br/>• AWS Polly<br/>• Audio generation<br/>• Playback control"]
+    end
+    
+    subgraph External["External Services"]
+        Maptiler["Maptiler<br/>(3D Maps & Tiles)"]
+        OSRM["OSRM<br/>(Road Routing)"]
+        Polly["AWS Polly<br/>(Text-to-Speech)"]
+    end
+    
+    UI --> State
+    State --> Core
+    Core --> External
+    
+    MapView -.->|renders| Maptiler
+    RoutingService -.->|fetches routes| OSRM
+    TTSService -.->|generates audio| Polly
+    
+    style UI fill:#e1f5ff
+    style State fill:#fff4e1
+    style Core fill:#ffe1f5
+    style External fill:#e1ffe1
 ```
 
 ### Data Flow
 
-```
-Emergency Triggered (Ctrl+Space)
-         │
-         ▼
-Filter responders within radius (300m)
-         │
-         ▼
-Compute actual routes for ALL candidates (OSRM)
-         │
-         ▼
-Rank by route distance (shortest first)
-         │
-         ▼
-Select top 2 responders
-         │
-         ├─────────────────────────┐
-         ▼                         ▼
-Dispatch responders        Generate audio briefing
-         │                         │
-         ▼                         ▼
-Animate movement          Play TTS via AWS Polly
-  (50 km/h)                       │
-         │                         │
-         └─────────┬───────────────┘
-                   ▼
-         Responders arrive at scene
+```mermaid
+flowchart TD
+    Start([Emergency Triggered<br/>Ctrl+Space]) --> Filter[Filter responders<br/>within radius 300m]
+    Filter --> Compute[Compute actual routes<br/>for ALL candidates via OSRM]
+    Compute --> Rank[Rank by route distance<br/>shortest first]
+    Rank --> Select[Select top 2 responders]
+    
+    Select --> Dispatch[Dispatch responders]
+    Select --> Audio[Generate audio briefing]
+    
+    Dispatch --> Animate[Animate movement<br/>50 km/h along route]
+    Audio --> Play[Play TTS via AWS Polly]
+    
+    Animate --> Arrive[Responders arrive at scene]
+    Play --> Arrive
+    
+    Filter -.->|0 responders| Escalate[Escalate radius<br/>300m → 400m → 600m]
+    Escalate -.-> Filter
+    
+    style Start fill:#4CAF50,color:#fff
+    style Arrive fill:#2196F3,color:#fff
+    style Escalate fill:#FF9800,color:#fff
 ```
 
 ### Algorithm: Route-Based Selection
